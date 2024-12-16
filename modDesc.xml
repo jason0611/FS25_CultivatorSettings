@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="93">
+	<author>Glowins Modschmiede</author>
+  <version>1.9.5.1</version>
+	<title>
+		<en>Cultivator Settings</en>
+		<de>Grubbereinstellungen</de>
+  </title>
+  <description>
+  <en>
+<![CDATA[
+Cultivator Settings
+
+Many cultivators in the game can be operated in reality with different working depths depending on the settings.
+With this modification, the cultivators in the vanilla game and from DLCs also have this option: They can be configured in the shop as a "normal" cultivator, as a "deep cultivator", as "shallow cultivator", or as a variable cultivator, controllable via ISOBUS (additional costs: 2.500 €). ISOBUS-capable cultivators can then be switched at the touch of a button (Ctrl+Alt G).
+Soil cultivation with the deep cultivator replaces ploughing.
+
+Further ideas or requests are welcome at https://github.com/jason0611/FS22_CultivatorSettings
+]]>
+		</en>	
+		<de>
+<![CDATA[
+Grubbereinstellungen
+
+Viele Grubber im Spiel lassen sich in der Realität je nach Einstellung mit unterschiedlicher Arbeitstiefe betreiben.
+Mit dieser Modifikation erhalten auch die Grubber im Vanilla-Spiel und aus DLCs diese Möglichkeit: Sie können im Shop als "normaler Grubber", als "Tiefengrubber", als "Flachgrubber", oder als variabler Grubber, ansteuerbar über ISOBUS, konfiguriert werden (Extrakosten: 2.500 €). ISOBUS-fähige Grubber lassen sich dann per Tastendruck (Strg+Alt G) umschalten.
+Die Bodenbearbeitung mit dem Tiefengrubber ersetzt das Pflügen.
+
+Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22_CultivatorSettings entgegengenommen
+]]>
+		</de>	    
+ 	</description>	
+    <multiplayer supported="true"/>
+	<iconFilename>icon_CultivatorSettings.dds</iconFilename>
+	<extraSourceFiles>
+    	<sourceFile filename="cultivatorSettingsRegister.lua" />
+    </extraSourceFiles>
+<!--
+	<actions>
+		<action name="TOGGLEDM" category="VEHICLE" ignoreComboMask="false" />
+	</actions>
+	<inputBinding>	
+		<actionBinding action="TOGGLEDM">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_g" neutralInput="0" index="1" />
+		</actionBinding>
+	</inputBinding>
+-->
+	<l10n>
+<!--
+		<text name="input_TOGGLEDM">
+            <en>Change cultivator setting</en>
+            <de>Grubbereinstellung wechseln</de>
+        </text>
+        <text name="action_switchToNormalMode">
+        	<en>Switch to cultivator</en>
+        	<de>Umschalten auf Grubber</de>
+        </text>
+        <text name="action_switchToDeepMode">
+        	<en>Switch to subsoiler</en>
+        	<de>Umschalten auf Tiefengrubber</de>
+        </text>
+        <text name="action_switchToShallowMode">
+        	<en>Switch to shallow cultivator</en>
+        	<de>Umschalten auf Flachgrubber</de>
+        </text>
+-->
+		<text name="deepModeHeader">
+            <en>Cultivator setting</en>
+            <de>Grubbereinstellung</de>
+        </text>
+		<text name="deepMode">
+            <en>Cultivator is configured as a subsoiler now</en>
+            <de>Grubber ist nun als Tiefengrubber eingestellt</de>
+        </text>
+		<text name="normalMode">
+            <en>Cultivator is configured as a cultivator now</en>
+            <de>Grubber ist nun als normaler Grubber eingestellt</de>
+        </text>
+        <text name="shallowMode">
+            <en>Cultivator is configured as a shallow cultivator now</en>
+            <de>Grubber ist nun als Flachgrubber eingestellt</de>
+        </text>
+        <text name="mode">
+        	<en>Mode: %s</en>
+        	<de>Modus: %s</de>
+        </text>
+		<text name="deepModeShort">
+            <en>Deep Cultivation</en>
+            <de>Tiefes Grubbern</de>
+        </text>
+        <text name="normalModeShort">
+        	<en>Normal Cultivation</en>
+        	<de>Normales Grubbern</de>
+        </text>
+        <text name="shallowModeShort">
+            <en>Shallow Cultivation</en>
+            <de>Flaches Grubbern</de>
+        </text>
+        <text name="text_DC_configuration">
+            <en>Cultivator Setting</en>
+            <de>Grubber-Einstellung</de>
+        </text>
+        <text name="text_DC_deep">
+            <en>Subsoiler</en>
+            <de>Tiefengrubber</de>
+        </text>
+         <text name="text_DC_shallow">
+            <en>Shallow cultivator</en>
+            <de>Flachgrubber</de>
+        </text>
+        <text name="text_DC_normal">
+            <en>Cultivator</en>
+            <de>Grubber</de>
+        </text>
+        <text name="text_DC_off">
+            <en>Default game setting</en>
+            <de>Keine Änderung</de>
+        </text>
+        <text name="text_DC_ISOBUS">
+            <en>Switchable</en>
+            <de>Umschaltbar</de>
+        </text>
+    </l10n>
+</modDesc>
