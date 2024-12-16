@@ -295,11 +295,11 @@ end
 	
 function CultivatorSettings:onRegisterActionEvents(isActiveForInput)
 	dbgprint("onRegisterActionEvents", 4)
-	if self.isClient then
-		local spec = self.spec_CultivatorSettings
-		CultivatorSettings.actionEvents = {} 
-		if self:getIsActiveForInput(true) and spec ~= nil and spec.config == 4 and not spec.useWorkModes then 
-		 	_, spec.actionEventMainSwitch = self:addPoweredActionEvent(CultivatorSettings.actionEvents, InputAction.TOGGLE_WORKMODE, self, CultivatorSettings.TOGGLE, false, true, false, true, nil)
+	local spec = self.spec_CultivatorSettings
+	if spec ~= nil and self.isClient then
+		spec.actionEvents = {} 
+		if self:getIsActiveForInput(true) and spec.config == 4 and not spec.useWorkModes then 
+		 	_, spec.actionEventMainSwitch = self:addPoweredActionEvent(spec.actionEvents, InputAction.TOGGLE_WORKMODE, self, CultivatorSettings.TOGGLE, false, true, false, true, nil)
 		end		
 	end
 end
