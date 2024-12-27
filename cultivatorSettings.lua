@@ -137,7 +137,7 @@ function CultivatorSettings:onLoad(savegame)
 	
 	spec.dirtyFlag = self:getNextDirtyFlag()
 	
-	spec.mode = 1
+	spec.mode = 3
 	spec.lastMode = 0
 	spec.config = 0	
 	spec.reset = false
@@ -167,6 +167,12 @@ function CultivatorSettings:onPostLoad(savegame)
 		dbgprint("onPostLoad : Loaded data for "..self:getName(), 1)
 	end
 	
+	-- if choosen by config, reset to original behaviour
+	if spec.config == 1 then 
+		spec.mode = 3
+		spec.reset = true 
+	end
+	
 	-- Set DC configuration if set by savegame
 	if spec.config > 1 then 
 		self.configurations["CultivatorSettings"] = spec.config
@@ -174,9 +180,6 @@ function CultivatorSettings:onPostLoad(savegame)
 			spec.mode = spec.config
 		end
 	end 
-	
-	-- if choosen by config, reset to original behaviour
-	if spec.config == 1 then spec.reset = true end
 	
 	dbgprint("onPostLoad : Cultivator config: "..tostring(spec.config), 1)
 	dbgprint("onPostLoad : Mode setting: "..tostring(spec.mode), 1)
@@ -301,11 +304,11 @@ function CultivatorSettings:TOGGLE(actionName, keyStatus, arg3, arg4, arg5)
 	if spec.mode > 4 then spec.mode = 2 end
 
 	if spec.mode == 2 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowMode"), "")
+		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowMode"), "")
 	elseif spec.mode == 3 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
+		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
 	elseif spec.mode == 4 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepMode"), "")
+		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepMode"), "")
 	end
 	self:raiseDirtyFlags(spec.dirtyFlag)
 	dbgprint("TOGGLE : Cultivator config: "..tostring(spec.config), 1)
@@ -363,7 +366,7 @@ function CultivatorSettings:onUpdate(dt)
 			specCV.isSubsoilerBackup = specCV.isSubsoiler
 			dbgprint("onUpdate: isSubsoiler saved", 2)
 		end		
-		if spec.config > 1 and spec.config < 5 and spec.mode ~= spec.lastMode then
+		if spec.config >= 2 and spec.config <= 4 and spec.mode ~= spec.lastMode then
 			if spec.mode == 2 then
 				specCV.useDeepMode = false
 				specCV.isSubsoiler = false

@@ -37,8 +37,8 @@ Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22
     </extraSourceFiles>
 
 	<l10n>
-		<text name="deepModeHeader">
-            <en>Cultivator setting</en>
+		<text name="text_DC_configuration">
+            <en>Cultivator Setting</en>
             <de>Grubbereinstellung</de>
         </text>
 		<text name="deepMode">
@@ -69,10 +69,6 @@ Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22
             <en>Shallow Cultivation</en>
             <de>Flaches Grubbern</de>
         </text>
-        <text name="text_DC_configuration">
-            <en>Cultivator Setting</en>
-            <de>Grubber-Einstellung</de>
-        </text>
         <text name="text_DC_deep">
             <en>Subsoiler</en>
             <de>Tiefengrubber</de>
@@ -87,7 +83,7 @@ Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22
         </text>
         <text name="text_DC_off">
             <en>Default game setting</en>
-            <de>Keine Änderung</de>
+            <de>Original-Einstellung</de>
         </text>
         <text name="text_DC_ISOBUS">
             <en>Switchable</en>
