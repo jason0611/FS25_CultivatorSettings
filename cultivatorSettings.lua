@@ -410,12 +410,12 @@ end
 function CultivatorSettings:onDraw(dt)
 	local spec = self.spec_CultivatorSettings
 	local specCV = self.spec_cultivator
-	if spec ~= nil and not spec.useWorkModes then 
-		if spec.mode == 1 then
+	if spec ~= nil and spec.config > 1 and (spec.config < 5 or not spec.useWorkModes) then 
+		if spec.mode == 3 then
 			g_currentMission:addExtraPrintText(string.format(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("mode"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalModeShort")))
 		elseif spec.mode == 2 then
 			g_currentMission:addExtraPrintText(string.format(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("mode"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowModeShort")))
-		elseif spec.mode == 3 then
+		elseif spec.mode == 4 then
 			g_currentMission:addExtraPrintText(string.format(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("mode"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeShort")))
 		end
 	end
