@@ -3,15 +3,11 @@
 --
 -- Glowins Modschmiede
 
--- Todo:
--- Fixed configuration settings must not be switchable
- 
 CultivatorSettings = {}
 
-if CultivatorSettings.MOD_NAME == nil then 
-	CultivatorSettings.MOD_NAME = g_currentModName 
-	CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
-end
+if CultivatorSettings.MOD_NAME == nil then CultivatorSettings.MOD_NAME = g_currentModName end
+if CultivatorSettings.PATH_NAME == nil then CultivatorSettings.PATH_NAME = g_currentModDirectory end
+CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
 
 source(g_currentModDirectory.."tools/gmsDebug.lua")
 GMSDebug:init(CultivatorSettings.MOD_NAME, true, 1)
@@ -29,73 +25,63 @@ function CultivatorSettings.getConfigurationsFromXML(self, superfunc, xmlFile, b
 
 	local category = storeItem.categoryName
 	if configurations ~= nil and category == "CULTIVATORS" then
-		local function loadFromSavegameXMLFileCS(self, xmlFile, key, configurationData)
-			dbgprint_r(self, 2, 0)
+		local csConfigFile = XMLFile.load("cultivatorSettingsConfig", CultivatorSettings.PATH_NAME.."cultivatorSettingsConfig.xml", xmlFile.schema)
+		
+		if csConfigFile ~= nil then
+			local allConfigs = self:getConfigurations()
+			local csConfig = allConfigs["CultivatorSettings"]
+			
+			dbgprint("addCSconfig : loading config from xml", 2)
+			dbgprint_r(csConfig, 4, 1)
+			
+			if csConfig ~= nil then
+				local configItems = {}
+				local i = 0
+				while true do
+					dbgprint("getConfigurationsFromXML : step "..tostring(i+1), 4)
+					local xmlKey = string.format(csConfig.configurationKey .."(%d)", i)
+					if not csConfigFile:hasProperty(xmlKey) or i > 4 then
+						dbgprint("getConfigurationsFromXML : exiting...", 4)
+						break
+					end
+					
+					dbgprint("getConfigurationsFromXML : loading item at "..tostring(xmlKey), 4)
+					local configItem = csConfig.itemClass.new(csConfig.name)
+					configItem:setIndex(#configItems + 1)
+					if configItem:loadFromXML(csConfigFile, csConfig.configurationsKey, xmlKey, baseDir, customEnvironment) then
+						if i == 0 then
+							configItem.name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_off")
+							configItem.desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_off")
+						elseif i == 1 then 
+							configItem.name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_shallow")
+							configItem.desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_shallow")
+						elseif i == 2 then 
+							configItem.name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_normal")
+							configItem.desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_normal")
+						elseif i == 3 then 
+							configItem.name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_deep")
+							configItem.desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_deep")
+						elseif i == 4 then 
+							configItem.name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_ISOBUS")
+							configItem.desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_ISOBUS")
+						end
+						table.insert(configItems, configItem)
+						dbgprint("getConfigurationsFromXML : item added:", 4)
+						dbgprint_r(configItem, 4, 1)
+					end
+					i = i + 1
+				end
+				if #configItems > 0 then
+					defaultConfigurationIds[csConfig.name] = ConfigurationUtil.getDefaultConfigIdFromItems(configItems)
+					configurations[csConfig.name] = configItems
+					dbgprint("getConfigurationsFromXML : configurations", 4)
+					dbgprint_r(configItems, 4, 2)
+				end
+			end
+			
+			csConfigFile:delete()
 		end
-		local function saveToXMLFileCS(self, xmlFile, key, isActive)
-			dbgprint_r(self, 2, 0)
-			xmlFile:setValue(key .. "#name", "CultivatorSettings")
-			xmlFile:setValue(key .. "#id", tostring(self.index))
-			xmlFile:setValue(key .. "#isActive", Utils.getNoNil(isActive, false))
-		end
-	
-		configurations["CultivatorSettings"] = {
-			{
-				index = 2,
-				name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_shallow"), 
-				isDefault = false, 
-				isSelectable = true, 
-				price = 0, 
-				dailyUpkeep = 0, 
-				loadFromSavegameXMLFile = loadFromSavegameXMLFileCS, 
-        		saveToXMLFile = saveToXMLFileCS,
-				desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_shallow")
-			},
-        	{
-        		index = 1,
-        		name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_normal"), 
-        		isDefault = false,  
-        		isSelectable = true, 
-        		price = 0, 
-        		dailyUpkeep = 0,
-        		loadFromSavegameXMLFile = loadFromSavegameXMLFileCS, 
-        		saveToXMLFile = saveToXMLFileCS, 
-        		esc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_normal")
-        	},        	
-        	{
-        		index = 3,
-        		name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_deep"), 
-        		isDefault = false, 
-        		isSelectable = true, 
-        		price = 0, 
-        		dailyUpkeep = 0, 
-        		loadFromSavegameXMLFile = loadFromSavegameXMLFileCS, 
-        		saveToXMLFile = saveToXMLFileCS,
-        		desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_deep")
-        	},
-        	{
-        		index = 4,
-        		name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_ISOBUS"), 
-        		isDefault = false, 
-        		isSelectable = true, 
-        		price = 2500, 
-        		dailyUpkeep = 0, 
-        		loadFromSavegameXMLFile = loadFromSavegameXMLFileCS, 
-        		saveToXMLFile = saveToXMLFileCS,
-        		desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_ISOBUS")
-        	},
-			{
-				index = 5,
-				name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_off"), 
-				isDefault = true, 
-				isSelectable = true, 
-				price = 0, 
-				dailyUpkeep = 0,
-				loadFromSavegameXMLFile = loadFromSavegameXMLFileCS, 
-        		saveToXMLFile = saveToXMLFileCS, 
-				desc = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_off")
-			}
-    	}
+    	
     	dbgprint("getConfigurationsFromXML : Configuration CultivatorSettings added", 2)
     	dbgprint_r(configurations["CultivatorSettings"], 4)
 	end
@@ -156,6 +142,7 @@ function CultivatorSettings:onLoad(savegame)
 	spec.config = 0	
 	spec.reset = false
 	spec.useWorkModes = false
+	spec.workModeAdded = false
 	spec.workModeMapping = {}
 end
 
@@ -174,22 +161,22 @@ function CultivatorSettings:onPostLoad(savegame)
 		local key = savegame.key .."."..CultivatorSettings.MOD_NAME..".CultivatorSettings"
 		
 		spec.config = xmlFile:getValue(key.."#config", spec.config)
-		if spec.config == 4 then
+		if spec.config == 5 then
 			spec.mode = xmlFile:getValue(key.."#mode", spec.mode)
 		end
 		dbgprint("onPostLoad : Loaded data for "..self:getName(), 1)
 	end
 	
 	-- Set DC configuration if set by savegame
-	if spec.config > 0 then 
+	if spec.config > 1 then 
 		self.configurations["CultivatorSettings"] = spec.config
-		if spec.config < 4 then
+		if spec.config < 5 then
 			spec.mode = spec.config
 		end
 	end 
 	
 	-- if choosen by config, reset to original behaviour
-	if spec.config == 5 then spec.reset = true end
+	if spec.config == 1 then spec.reset = true end
 	
 	dbgprint("onPostLoad : Cultivator config: "..tostring(spec.config), 1)
 	dbgprint("onPostLoad : Mode setting: "..tostring(spec.mode), 1)
@@ -201,6 +188,7 @@ function CultivatorSettings:onPostLoad(savegame)
 			if spec_wm.workModes[i].useDeepMode then
 				-- add third workMode by cloning
 				if spec_wm.workModes[3] == nil then
+					spec.workModeAdded = true
 					local cloneMode = {}
 					for j, k in pairs(spec_wm.workModes[i]) do
 						cloneMode[j] = k
@@ -214,9 +202,9 @@ function CultivatorSettings:onPostLoad(savegame)
 				spec_wm.workModes[i].name = g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalModeShort")
 				
 				-- set mapping to spec.mode
-				spec.workModeMapping[1] = i
-				spec.workModeMapping[2] = i == 1 and 2 or 1				
-				spec.workModeMapping[3] = 3
+				spec.workModeMapping[2] = i == 1 and 2 or 1
+				spec.workModeMapping[3] = i
+				spec.workModeMapping[4] = 3
 				
 				spec.useWorkModes = true
 				spec_wm.stateMax = 3
@@ -310,13 +298,13 @@ function CultivatorSettings:TOGGLE(actionName, keyStatus, arg3, arg4, arg5)
 	dbgprint_r(spec, 4)
 	
 	spec.mode = spec.mode + 1
-	if spec.mode > 3 then spec.mode = 1 end
+	if spec.mode > 4 then spec.mode = 2 end
 
-	if spec.mode == 1 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
-	elseif spec.mode == 2 then
+	if spec.mode == 2 then
 		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowMode"), "")
 	elseif spec.mode == 3 then
+		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
+	elseif spec.mode == 4 then
 		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeHeader"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepMode"), "")
 	end
 	self:raiseDirtyFlags(spec.dirtyFlag)
@@ -328,7 +316,7 @@ Utils.appendedFunction(Cultivator.onWorkModeChanged, CultivatorSettings.TOGGLE)
 function CultivatorSettings:getIsWorkModeChangeAllowed(superfunc)
 	local spec = self.spec_CultivatorSettings
 	local result = superfunc(self)
-	if spec ~= nil and spec.config > 0 and spec.config < 4 then
+	if spec ~= nil and spec.config > 1 and spec.config < 5 then
 		result = false
 	end
 	return result
@@ -341,7 +329,7 @@ function CultivatorSettings:getPowerMultiplier(superfunc)
 	
 	if not spec.useWorkModes then
 		if spec.mode == 2 then multiplier = 0.7 end
-		if spec.mode == 3 then multiplier = 1.5 end
+		if spec.mode == 4 then multiplier = 1.5 end
 	end
 	
 	--[[ fix multiplier value for REAimplements
@@ -375,22 +363,21 @@ function CultivatorSettings:onUpdate(dt)
 			specCV.isSubsoilerBackup = specCV.isSubsoiler
 			dbgprint("onUpdate: isSubsoiler saved", 2)
 		end		
-		if spec.config > 0 and spec.config < 5 and spec.mode ~= spec.lastMode then
-			if spec.mode == 1 then
-				specCV.useDeepMode = true
-				specCV.isSubsoiler = false
-				dbgprint("onUpdate: setting normal mode", 2)
-			elseif spec.mode == 2 then
+		if spec.config > 1 and spec.config < 5 and spec.mode ~= spec.lastMode then
+			if spec.mode == 2 then
 				specCV.useDeepMode = false
 				specCV.isSubsoiler = false
 				dbgprint("onUpdate: setting shallow mode", 2)
 			elseif spec.mode == 3 then
 				specCV.useDeepMode = true
+				specCV.isSubsoiler = false
+				dbgprint("onUpdate: setting normal mode", 2)
+			elseif spec.mode == 4 then
+				specCV.useDeepMode = true
 				specCV.isSubsoiler = true
 				dbgprint("onUpdate: setting deep mode", 2)
 			end
 			
-			--if #spec.workModeMapping == 3 then
 			if spec.useWorkModes then
 				self:setWorkMode(spec.workModeMapping[spec.mode])
 				AnimatedVehicle.updateAnimations(self, 0, true)	
@@ -399,7 +386,7 @@ function CultivatorSettings:onUpdate(dt)
 			
 			spec.lastMode = spec.mode
 		end
-		if spec.config == 5 and spec.reset then
+		if spec.config == 1 and spec.reset then
 			if specCV.useDeepMode ~= specCV.useDeepModeBackup then
 				specCV.useDeepMode = specCV.useDeepModeBackup
 				dbgprint("useDeepMode reset", 1)
@@ -407,6 +394,10 @@ function CultivatorSettings:onUpdate(dt)
 			if specCV.isSubsoiler ~= specCV.isSubsoilerBackup then
 				specCV.isSubsoiler = specCV.isSubsoilerBackup
 				dbgprint("isSubsoiler reset", 1)
+			end
+			if specWM ~= nil and spec.workModeAdded then 
+				specWM.workModes[3] = nil 
+				specWM.stateMax = 2
 			end
 			spec.reset = false
 		end

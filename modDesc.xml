@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="93">
 	<author>Glowins Modschmiede</author>
-  <version>1.9.7.0</version>
+  <version>1.9.8.0</version>
 	<title>
 		<en>Cultivator Settings</en>
 		<de>Grubbereinstellungen</de>
@@ -35,35 +35,8 @@ Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22
 	<extraSourceFiles>
     	<sourceFile filename="cultivatorSettingsRegister.lua" />
     </extraSourceFiles>
-<!--
-	<actions>
-		<action name="TOGGLEDM" category="VEHICLE" ignoreComboMask="false" />
-	</actions>
-	<inputBinding>	
-		<actionBinding action="TOGGLEDM">
-			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_lalt KEY_g" neutralInput="0" index="1" />
-		</actionBinding>
-	</inputBinding>
--->
+
 	<l10n>
-<!--
-		<text name="input_TOGGLEDM">
-            <en>Change cultivator setting</en>
-            <de>Grubbereinstellung wechseln</de>
-        </text>
-        <text name="action_switchToNormalMode">
-        	<en>Switch to cultivator</en>
-        	<de>Umschalten auf Grubber</de>
-        </text>
-        <text name="action_switchToDeepMode">
-        	<en>Switch to subsoiler</en>
-        	<de>Umschalten auf Tiefengrubber</de>
-        </text>
-        <text name="action_switchToShallowMode">
-        	<en>Switch to shallow cultivator</en>
-        	<de>Umschalten auf Flachgrubber</de>
-        </text>
--->
 		<text name="deepModeHeader">
             <en>Cultivator setting</en>
             <de>Grubbereinstellung</de>
