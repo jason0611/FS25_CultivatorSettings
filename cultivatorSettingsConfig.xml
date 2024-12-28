@@ -1,0 +1,13 @@
+<vehicle>
+	<FS25_CultivatorSettings>	
+		<CultivatorSettings>
+			<CultivatorSettingsConfigurations isYesNoOption="false">
+				<CultivatorSettingsConfiguration name="CS_off" price="0"/>
+				<CultivatorSettingsConfiguration name="CS_shallow" price="0"/>
+				<CultivatorSettingsConfiguration name="CS_normal" price="0"/>
+				<CultivatorSettingsConfiguration name="CS_deep" price="0"/>
+				<CultivatorSettingsConfiguration name="CS_isobus" price="2500"/>
+			</CultivatorSettingsConfigurations>
+		</CultivatorSettings>
+	</FS25_CultivatorSettings>
+</vehicle>
