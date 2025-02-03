@@ -10,7 +10,7 @@ if CultivatorSettings.PATH_NAME == nil then CultivatorSettings.PATH_NAME = g_cur
 CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
 
 source(g_currentModDirectory.."tools/gmsDebug.lua")
-GMSDebug:init(CultivatorSettings.MOD_NAME, false)
+GMSDebug:init(CultivatorSettings.MOD_NAME, true, 1)
 GMSDebug:enableConsoleCommands("csDebug")
 
 -- Standards / Basics
@@ -367,6 +367,9 @@ function CultivatorSettings:onUpdate(dt)
 			dbgprint("onUpdate: isSubsoiler saved", 2)
 		end		
 		if spec.config >= 2 and spec.config <= 4 and spec.mode ~= spec.lastMode then
+			spec.mode = spec.config
+
+		elseif spec.config == 5 and not spec.useWorkModes then
 			if spec.mode == 2 then
 				specCV.useDeepMode = false
 				specCV.isSubsoiler = false
@@ -379,9 +382,7 @@ function CultivatorSettings:onUpdate(dt)
 				specCV.useDeepMode = true
 				specCV.isSubsoiler = true
 				dbgprint("onUpdate: setting deep mode", 2)
-			end
-			
-			if spec.useWorkModes then
+			elseif spec.config == 5 and spec.useWorkModes then
 				self:setWorkMode(spec.workModeMapping[spec.mode])
 				AnimatedVehicle.updateAnimations(self, 0, true)	
 				dbgprint("onUpdate: setting workMode to "..tostring(spec.workModeMapping[spec.mode]), 2)
