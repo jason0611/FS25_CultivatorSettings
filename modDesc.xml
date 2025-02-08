@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="94">
+<modDesc descVersion="95">
 	<author>Glowins Modschmiede</author>
   <version>2.0.0.0</version>
 	<title>
@@ -15,7 +15,7 @@ Description:
 Many cultivators from the game can be operated at different working depths in reality, depending on the setting.
 In the game, individual cultivators also have the option of being set to “flat cultivator” or “normal cultivator”.
 
-With this modification, all cultivators in the vanilla game have this option and can also be set to “deep cultivator”.
+With this modification, all cultivators get this option and can also be set to “deep cultivator”.
 They can be configured in the store to a fixed working mode or as a variable cultivator, which can then be switched via the working mode (extra cost: €2,500). If a cultivator is to be used unchanged, this can also be configured in the store.
 
 Soil cultivation with the deep cultivator replaces plowing.
@@ -24,7 +24,7 @@ Key combinations:
 The cultivators are switched via the standard function “Switch working mode”
 
 GitHub link: https://github.com/jason0611/FS25_CultivatorSettings
-Further ideas or requests are welcome at https://github.com/jason0611/FS22_CultivatorSettings
+Further ideas or requests are welcome at https://github.com/jason0611/FS25_CultivatorSettings
 ]]>
 		</en>	
 		<de>
@@ -35,7 +35,7 @@ Beschreibung:
 Viele Grubber aus dem Spiel lassen sich in der Realität je nach Einstellung mit unterschiedlicher Arbeitstiefe betreiben.
 Auch im Spiel verfügen einzelne Grubber über die Möglichkeit, auf "Flachgrubber" oder "normaler Grubber" eingestellt zu werden.
 
-Mit dieser Modifikation erhalten alle Grubber im Vanilla-Spiel diese Möglichkeit und können darüber hinaus auch auf "Tiefengrubber" eingestellt werden.
+Mit dieser Modifikation erhalten alle Grubber diese Möglichkeit und können darüber hinaus auch auf "Tiefengrubber" eingestellt werden.
 Sie können im Shop auf einen festen Arbeitsmodus konfiguriert werden, oder als variabler Grubber, der dann über den Arbeitsmodus umgeschaltet werden kann (Extrakosten: 2.500 €). Soll ein Grubber unverändert genutzt werden, ist auch das im Shop konfigurierbar.
 
 Die Bodenbearbeitung mit dem Tiefengrubber ersetzt das Pflügen.
@@ -44,7 +44,7 @@ Tastenkombinationen:
 Das Umschalten der Grubber erfolgt über die Standard-Funktion "Arbeitsmodus umschalten"
 
 GitHub-Link: https://github.com/jason0611/FS25_CultivatorSettings
-Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS22_CultivatorSettings entgegengenommen
+Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS25_CultivatorSettings entgegengenommen
 ]]>
 		</de>	    
  	</description>	
