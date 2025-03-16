@@ -24,9 +24,8 @@ function CultivatorSettings.getConfigurationsFromXML(self, superfunc, xmlFile, b
 	dbgprint("getConfigurationsFromXML : Kat: "..storeItem.categoryName.." / ".."Name: "..storeItem.xmlFilename, 2)
 
 	local category = storeItem.categoryName
-	if configurations ~= nil and category == "CULTIVATORS" then
-		local csConfigFile = XMLFile.load("cultivatorSettingsConfig", CultivatorSettings.PATH_NAME.."cultivatorSettingsConfig.xml", xmlFile.schema)
-		
+	if configurations ~= nil and xmlFile:hasProperty("vehicle.cultivator") and (category == "CULTIVATORS" or (category == "NEXAT" and string.find(xmlFile.filename, "toricNX1400") ~= nil)) then		
+		local csConfigFile = XMLFile.load("cultivatorSettingsConfig", CultivatorSettings.PATH_NAME.."cultivatorSettingsConfig.xml", xmlFile.schema)		
 		if csConfigFile ~= nil then
 			local allConfigs = self:getConfigurations()
 			local csConfig = allConfigs["CultivatorSettings"]
