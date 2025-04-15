@@ -10,7 +10,7 @@ if CultivatorSettings.PATH_NAME == nil then CultivatorSettings.PATH_NAME = g_cur
 CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
 
 source(g_currentModDirectory.."tools/gmsDebug.lua")
-GMSDebug:init(CultivatorSettings.MOD_NAME, true, 1)
+GMSDebug:init(CultivatorSettings.MOD_NAME, false)
 GMSDebug:enableConsoleCommands("csDebug")
 
 -- Standards / Basics
@@ -24,9 +24,8 @@ function CultivatorSettings.getConfigurationsFromXML(self, superfunc, xmlFile, b
 	dbgprint("getConfigurationsFromXML : Kat: "..storeItem.categoryName.." / ".."Name: "..storeItem.xmlFilename, 2)
 
 	local category = storeItem.categoryName
-	if configurations ~= nil and category == "CULTIVATORS" then
-		local csConfigFile = XMLFile.load("cultivatorSettingsConfig", CultivatorSettings.PATH_NAME.."cultivatorSettingsConfig.xml", xmlFile.schema)
-		
+	if configurations ~= nil and xmlFile:hasProperty("vehicle.cultivator") and (category == "CULTIVATORS" or (category == "NEXAT" and string.find(xmlFile.filename, "toricNX1400") ~= nil)) then		
+		local csConfigFile = XMLFile.load("cultivatorSettingsConfig", CultivatorSettings.PATH_NAME.."cultivatorSettingsConfig.xml", xmlFile.schema)		
 		if csConfigFile ~= nil then
 			local allConfigs = self:getConfigurations()
 			local csConfig = allConfigs["CultivatorSettings"]
@@ -366,22 +365,27 @@ function CultivatorSettings:onUpdate(dt)
 			specCV.isSubsoilerBackup = specCV.isSubsoiler
 			dbgprint("onUpdate: isSubsoiler saved", 2)
 		end		
-		if spec.config >= 2 and spec.config <= 4 and spec.mode ~= spec.lastMode then
-			if spec.mode == 2 then
-				specCV.useDeepMode = false
-				specCV.isSubsoiler = false
-				dbgprint("onUpdate: setting shallow mode", 2)
-			elseif spec.mode == 3 then
-				specCV.useDeepMode = true
-				specCV.isSubsoiler = false
-				dbgprint("onUpdate: setting normal mode", 2)
-			elseif spec.mode == 4 then
-				specCV.useDeepMode = true
-				specCV.isSubsoiler = true
-				dbgprint("onUpdate: setting deep mode", 2)
+		if spec.mode ~= spec.lastMode then
+			if spec.config >= 2 and spec.config <= 4 then
+				spec.mode = spec.config
+				dbgprint("onUpdate: setting mode as configured = "..tostring(spec.mode), 2)
 			end
 			
-			if spec.useWorkModes then
+			if (spec.config >= 2 and spec.config <= 4) or (spec.config == 5 and not spec.useWorkModes) then
+				if spec.mode == 2 then
+					specCV.useDeepMode = false
+					specCV.isSubsoiler = false
+					dbgprint("onUpdate: setting shallow mode", 2)
+				elseif spec.mode == 3 then
+					specCV.useDeepMode = true
+					specCV.isSubsoiler = false
+					dbgprint("onUpdate: setting normal mode", 2)
+				elseif spec.mode == 4 then
+					specCV.useDeepMode = true
+					specCV.isSubsoiler = true
+					dbgprint("onUpdate: setting deep mode", 2)
+				end
+			elseif spec.config == 5 and spec.useWorkModes then
 				self:setWorkMode(spec.workModeMapping[spec.mode])
 				AnimatedVehicle.updateAnimations(self, 0, true)	
 				dbgprint("onUpdate: setting workMode to "..tostring(spec.workModeMapping[spec.mode]), 2)
