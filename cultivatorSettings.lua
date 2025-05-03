@@ -71,6 +71,7 @@ function CultivatorSettings.getConfigurationsFromXML(self, superfunc, xmlFile, b
 					i = i + 1
 				end
 				if #configItems > 0 then
+					if defaultConfigurationIds == nil then defaultConfigurationIds = {} end
 					defaultConfigurationIds[csConfig.name] = ConfigurationUtil.getDefaultConfigIdFromItems(configItems)
 					configurations[csConfig.name] = configItems
 					dbgprint("getConfigurationsFromXML : configurations", 4)
