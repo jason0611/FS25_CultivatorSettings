@@ -23,6 +23,9 @@ Soil cultivation with the deep cultivator replaces plowing.
 Key combinations: 
 The cultivators are switched via the standard function “Switch working mode”
 
+Change Log V2.0.0.1 
+- Fixed: Nil-condition that could occur occasionally at game/server start
+
 GitHub link: https://github.com/jason0611/FS25_CultivatorSettings
 Further ideas or requests are welcome at https://github.com/jason0611/FS25_CultivatorSettings
 ]]>
@@ -42,6 +45,9 @@ Die Bodenbearbeitung mit dem Tiefengrubber ersetzt das Pflügen.
 
 Tastenkombinationen: 
 Das Umschalten der Grubber erfolgt über die Standard-Funktion "Arbeitsmodus umschalten"
+
+Change Log V2.0.0.1 
+- Behoben: Nil-Bedingung, die vereinzelt beim Spiel-/Serverstart auftreten konnte
 
 GitHub-Link: https://github.com/jason0611/FS25_CultivatorSettings
 Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS25_CultivatorSettings entgegengenommen
