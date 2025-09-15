@@ -335,17 +335,20 @@ function CultivatorSettings:getPowerMultiplier(superfunc)
 	local soilTypeMultiplier = 1
 	
 	-- spec.mode:
-	-- 1: shallowMode 
-	-- 2: normalMode
-	-- 3: deepMode
+	-- 1: default mode
+	-- 2: shallowMode 
+	-- 3: normalMode
+	-- 4: deepMode
 	
 	if not spec.useWorkModes then
 		if spec.mode == 2 then multiplier = 0.7 end
 		if spec.mode == 4 then multiplier = 1.5 end
 	end
 	
+	dbgrender("multiplier: "..tostring(multiplier), 8, 3)
+	
 	-- precision farming
-	if pf ~= nil and (spec.mode == 2 or spec.mode == 3) then
+	if pf ~= nil and (spec.mode == 3 or spec.mode == 4) then
 		-- find implement's root node, use vehicle's rootNode if not found
 		local rootNode = self.rootNode
 		local implements = self:getAttachedImplements()
@@ -467,5 +470,7 @@ function CultivatorSettings:onDraw(dt)
 		dbgrender("isSubsoiler: "..tostring(specCV.isSubsoiler), 2, 3)
 		dbgrender("useDeepModeBackup: "..tostring(specCV.useDeepModeBackup), 4, 3)
 		dbgrender("isSubsoilerBackup: "..tostring(specCV.isSubsoilerBackup), 5, 3)
+		dbgrender("spec.mode: "..tostring(spec.mode), 6, 3)
+		dbgrender("spec.config: "..tostring(spec.config), 7, 3)
 	end
 end
