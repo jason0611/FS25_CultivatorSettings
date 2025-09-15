@@ -465,7 +465,7 @@ function CultivatorSettings:onDraw(dt)
 			g_currentMission:addExtraPrintText(string.format(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("mode"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeShort")))
 		end
 	end
-	if specCV ~= nil then
+	if specCV ~= nil and spec ~= nil then
 		dbgrender("useDeepMode: "..tostring(specCV.useDeepMode), 1, 3)
 		dbgrender("isSubsoiler: "..tostring(specCV.isSubsoiler), 2, 3)
 		dbgrender("useDeepModeBackup: "..tostring(specCV.useDeepModeBackup), 4, 3)
