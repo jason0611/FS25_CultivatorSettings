@@ -12,7 +12,7 @@ CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
 CultivatorSettings.soilTypeMultipliers = {0.7, 1.0, 1.3, 1.6}
 
 source(g_currentModDirectory.."tools/gmsDebug.lua")
-GMSDebug:init(CultivatorSettings.MOD_NAME, false)
+GMSDebug:init(CultivatorSettings.MOD_NAME, true, 1)
 GMSDebug:enableConsoleCommands("csDebug")
 
 -- Standards / Basics
