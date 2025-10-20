@@ -9,8 +9,10 @@ if CultivatorSettings.MOD_NAME == nil then CultivatorSettings.MOD_NAME = g_curre
 if CultivatorSettings.PATH_NAME == nil then CultivatorSettings.PATH_NAME = g_currentModDirectory end
 CultivatorSettings.MODSETTINGSDIR = g_currentModSettingsDirectory
 
+CultivatorSettings.soilTypeMultipliers = {0.7, 1.0, 1.3, 1.6}
+
 source(g_currentModDirectory.."tools/gmsDebug.lua")
-GMSDebug:init(CultivatorSettings.MOD_NAME, false)
+GMSDebug:init(CultivatorSettings.MOD_NAME, true, 1)
 GMSDebug:enableConsoleCommands("csDebug")
 
 -- Standards / Basics
@@ -328,12 +330,51 @@ WorkMode.getIsWorkModeChangeAllowed = Utils.overwrittenFunction(WorkMode.getIsWo
 
 function CultivatorSettings:getPowerMultiplier(superfunc)
 	local spec = self.spec_CultivatorSettings
+	local pf = FS25_precisionFarming ~= nil and FS25_precisionFarming.g_precisionFarming or nil
 	local multiplier = 1
+	local soilTypeMultiplier = 1
+	
+	-- spec.mode:
+	-- 1: default mode
+	-- 2: shallowMode 
+	-- 3: normalMode
+	-- 4: deepMode
 	
 	if not spec.useWorkModes then
 		if spec.mode == 2 then multiplier = 0.7 end
 		if spec.mode == 4 then multiplier = 1.5 end
 	end
+	
+	dbgrender("multiplier: "..tostring(multiplier), 8, 3)
+	
+	-- precision farming
+	if pf ~= nil and (spec.mode == 3 or spec.mode == 4) then
+		-- find implement's root node, use vehicle's rootNode if not found
+		local rootNode = self.rootNode
+		local implements = self:getAttachedImplements()
+		for _,implement in pairs(implements) do
+			if implement.spec_cultivator ~= nil then	
+				rootNode = implement.rootNode or rootNode
+				break
+			end
+		end
+		
+		-- get soil type at tool's position
+		local wx, _, wz = getWorldTranslation(rootNode)
+		local soilMap = pf.soilMap
+		local soilTypeIndex = soilMap:getTypeIndexAtWorldPos(wx, wz)
+		
+		-- 1: Lehmiger Sand
+		-- 2: Sandiger Lehm
+		-- 3: Lehm
+		-- 4: Schluffiger Ton
+		
+		if soilTypeIndex ~= nil and soilTypeIndex > 0 then
+			soilTypeMultiplier = CultivatorSettings.soilTypeMultipliers[soilTypeIndex]
+		end
+		dbgrender("soilTypeIndex: "..tostring(soilTypeIndex), 10, 3)
+		dbgrender("soilTypeMultiplier: "..tostring(soilTypeMultiplier), 11, 3)
+	end	
 	
 	--[[ fix multiplier value for REAimplements
 	local specPC = self.spec_powerConsumer
@@ -347,7 +388,7 @@ function CultivatorSettings:getPowerMultiplier(superfunc)
 	end 	
 	--]]
 		
-	return superfunc(self) * multiplier
+	return superfunc(self) * multiplier * soilTypeMultiplier
 end
 
 -- change setting using spec.mode or workmode
@@ -424,10 +465,12 @@ function CultivatorSettings:onDraw(dt)
 			g_currentMission:addExtraPrintText(string.format(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("mode"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepModeShort")))
 		end
 	end
-	if specCV ~= nil then
+	if specCV ~= nil and spec ~= nil then
 		dbgrender("useDeepMode: "..tostring(specCV.useDeepMode), 1, 3)
 		dbgrender("isSubsoiler: "..tostring(specCV.isSubsoiler), 2, 3)
 		dbgrender("useDeepModeBackup: "..tostring(specCV.useDeepModeBackup), 4, 3)
 		dbgrender("isSubsoilerBackup: "..tostring(specCV.isSubsoilerBackup), 5, 3)
+		dbgrender("spec.mode: "..tostring(spec.mode), 6, 3)
+		dbgrender("spec.config: "..tostring(spec.config), 7, 3)
 	end
 end

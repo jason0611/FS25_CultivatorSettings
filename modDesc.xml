@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="99">
+<modDesc descVersion="103">
 	<author>Glowins Modschmiede</author>
-  <version>2.0.0.1</version>
+  <version>2.0.1.0</version>
 	<title>
 		<en>Cultivator Settings</en>
 		<de>Grubbereinstellungen</de>
@@ -26,6 +26,9 @@ The cultivators are switched via the standard function “Switch working mode”
 Change Log V2.0.0.1 
 - Fixed: Nil-condition that could occur occasionally at game/server start
 
+Change Log V2.0.1.0
+- Taking different soil types into account with PrecisionFarming
+
 GitHub link: https://github.com/jason0611/FS25_CultivatorSettings
 Further ideas or requests are welcome at https://github.com/jason0611/FS25_CultivatorSettings
 ]]>
@@ -48,6 +51,9 @@ Das Umschalten der Grubber erfolgt über die Standard-Funktion "Arbeitsmodus ums
 
 Change Log V2.0.0.1 
 - Behoben: Nil-Bedingung, die vereinzelt beim Spiel-/Serverstart auftreten konnte
+
+Change Log V2.0.1.0
+- Berücksichtigung der verschiedenen Bodentypen mit PrecisionFarming
 
 GitHub-Link: https://github.com/jason0611/FS25_CultivatorSettings
 Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS25_CultivatorSettings entgegengenommen
