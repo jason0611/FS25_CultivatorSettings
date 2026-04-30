@@ -125,6 +125,7 @@ end
 
 function CultivatorSettings.registerOverwrittenFunctions(vehicleType)
 	SpecializationUtil.registerOverwrittenFunction(vehicleType, "getPowerMultiplier", CultivatorSettings.getPowerMultiplier)
+	--SpecializationUtil.registerOverwrittenFunction(vehicleType, "getDefaultSpeedLimit", CultivatorSettings.getDefaultSpeedLimit)
 end
 
 function CultivatorSettings:onLoad(savegame)
@@ -327,6 +328,22 @@ function CultivatorSettings:getIsWorkModeChangeAllowed(superfunc)
 	return result
 end
 WorkMode.getIsWorkModeChangeAllowed = Utils.overwrittenFunction(WorkMode.getIsWorkModeChangeAllowed, CultivatorSettings.getIsWorkModeChangeAllowed) 
+
+function CultivatorSettings:getDefaultSpeedLimit(superfunc)
+	if superfunc ~= nil then
+		local speed = superfunc(self)
+		
+		local spec = self.spec_CultivatorSettings
+		if spec ~= nil and not spec.useWorkModes then
+			if spec.mode == 2 then speed = 18 end
+			if spec.mode == 4 then speed = 10 end
+		end
+		return speed
+	else
+		return math.huge
+	end
+end
+Cultivator.getDefaultSpeedLimit = Utils.overwrittenFunction(Cultivator.getDefaultSpeedLimit, CultivatorSettings.getDefaultSpeedLimit)
 
 function CultivatorSettings:getPowerMultiplier(superfunc)
 	local spec = self.spec_CultivatorSettings
