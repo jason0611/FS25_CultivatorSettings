@@ -330,18 +330,17 @@ end
 WorkMode.getIsWorkModeChangeAllowed = Utils.overwrittenFunction(WorkMode.getIsWorkModeChangeAllowed, CultivatorSettings.getIsWorkModeChangeAllowed) 
 
 function CultivatorSettings:getDefaultSpeedLimit(superfunc)
+	local speed = math.huge 
 	if superfunc ~= nil then
-		local speed = superfunc(self)
-		
-		local spec = self.spec_CultivatorSettings
-		if spec ~= nil and not spec.useWorkModes then
-			if spec.mode == 2 then speed = 18 end
-			if spec.mode == 4 then speed = 10 end
-		end
-		return speed
-	else
-		return math.huge
+		speed = superfunc(self)
 	end
+	
+	local spec = self.spec_CultivatorSettings
+	if spec ~= nil then
+		if spec.mode == 2 then speed = math.min(speed, 18) end
+		if spec.mode == 4 then speed = math.min(speed, 10) end
+	end
+	return speed
 end
 Cultivator.getDefaultSpeedLimit = Utils.overwrittenFunction(Cultivator.getDefaultSpeedLimit, CultivatorSettings.getDefaultSpeedLimit)
 
