@@ -244,7 +244,7 @@ function CultivatorSettings:saveToXMLFile(xmlFile, key, usedModNames)
 	spec.config = self.configurations["CultivatorSettings"] or 0
 	if spec.config > 0 then
 		xmlFile:setValue(key.."#config", spec.config)
-		if spec.config == 4 then
+		if spec.config == 5 then
 			dbgprint("saveToXMLFile : key: "..tostring(key), 2)
 			xmlFile:setValue(key.."#mode", spec.mode)
 		end
