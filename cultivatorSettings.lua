@@ -221,8 +221,12 @@ function CultivatorSettings:onPostLoad(savegame)
 	end
 	if spec.useWorkModes then
 		Cultivator.onWorkModeChanged = Utils.overwrittenFunction(Cultivator.onWorkModeChanged, CultivatorSettings.onWorkModeChanged)
+		if spec.config == 5 then
+			local state = spec.workModeMapping[spec.mode]
+			self:setWorkMode(state, true)
+			AnimatedVehicle.updateAnimations(self, 99999999, true)
+		end
 	end
-	
 	dbgprint_r(self.configurations, 4, 2)
 end
 
