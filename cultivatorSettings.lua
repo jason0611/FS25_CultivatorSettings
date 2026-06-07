@@ -175,7 +175,7 @@ function CultivatorSettings:onPostLoad(savegame)
 		spec.reset = true 
 	end
 	
-	-- Set DC configuration if set by savegame
+	-- Change configuration if set by savegame
 	if spec.config > 1 then 
 		self.configurations["CultivatorSettings"] = spec.config
 		if spec.config < 5 then
@@ -186,7 +186,7 @@ function CultivatorSettings:onPostLoad(savegame)
 	dbgprint("onPostLoad : Cultivator config: "..tostring(spec.config), 1)
 	dbgprint("onPostLoad : Mode setting: "..tostring(spec.mode), 1)
 	
-	-- identify existing workModes and create mapping table, expand workmodes with subsoiler setting
+	-- identify existing workModes and create mapping table, extend workmodes with subsoiler setting
 	if spec_wm ~= nil and spec_wm.workModes ~= nil and spec_wm.workModes[1] ~= nil and spec_wm.workModes[2] ~= nil then
 		for i = 1,2 do
 			spec_wm.workModes[i].isSubsoiler = false
@@ -231,10 +231,19 @@ function CultivatorSettings:onPostLoad(savegame)
 end
 
 function CultivatorSettings:onWorkModeChanged(superfunc, workMode, oldWorkMode)
+	dbgprint("onWorkModeChanged", 2)
 	superfunc(self, workMode, oldWorkMode)
 	if workMode.isSubsoiler ~= nil then
         self.spec_cultivator.isSubsoiler = workMode.isSubsoiler
         self:updateCultivatorAIRequirements()
+    end
+    
+    local spec = self.spec_CultivatorSettings
+	local spec_wm = self.spec_workMode
+	
+    local newState = spec_wm.state
+    for i = 2,4 do
+    	if spec.workModeMapping[i] == newState then spec.mode = i end
     end
 end
 
@@ -302,25 +311,26 @@ function CultivatorSettings:onRegisterActionEvents(isActiveForInput)
 end
 
 function CultivatorSettings:TOGGLE(actionName, keyStatus, arg3, arg4, arg5)
-	dbgprint("TOGGLE", 4)
+	dbgprint("TOGGLE", 3)
 	local spec = self.spec_CultivatorSettings
 	dbgprint_r(spec, 4)
 	
 	spec.mode = spec.mode + 1
 	if spec.mode > 4 then spec.mode = 2 end
 
-	if spec.mode == 2 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowMode"), "")
-	elseif spec.mode == 3 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
-	elseif spec.mode == 4 then
-		g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepMode"), "")
+	if not spec.useWorkModes then
+		if spec.mode == 2 then
+			g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("shallowMode"), "")
+		elseif spec.mode == 3 then
+			g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("normalMode"), "")
+		elseif spec.mode == 4 then
+			g_currentMission:addGameNotification(g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("text_DC_configuration"), g_i18n.modEnvironments[CultivatorSettings.MOD_NAME]:getText("deepMode"), "")
+		end
 	end
 	self:raiseDirtyFlags(spec.dirtyFlag)
 	dbgprint("TOGGLE : Cultivator config: "..tostring(spec.config), 1)
 	dbgprint("TOGGLE : Mode setting: "..tostring(spec.mode), 1)
 end
-Utils.appendedFunction(Cultivator.onWorkModeChanged, CultivatorSettings.TOGGLE)
 
 function CultivatorSettings:getIsWorkModeChangeAllowed(superfunc)
 	local spec = self.spec_CultivatorSettings
@@ -349,7 +359,7 @@ function CultivatorSettings:getPowerMultiplier(superfunc)
 		if spec.mode == 4 then multiplier = 1.5 end
 	end
 	
-	dbgrender("multiplier: "..tostring(multiplier), 8, 3)
+	dbgrender("multiplier: "..tostring(multiplier), 11, 3)
 	
 	-- precision farming
 	if pf ~= nil and (spec.mode == 3 or spec.mode == 4) then
@@ -431,10 +441,6 @@ function CultivatorSettings:onUpdate(dt)
 					specCV.isSubsoiler = true
 					dbgprint("onUpdate: setting deep mode", 2)
 				end
-			elseif spec.config == 5 and spec.useWorkModes then
-				self:setWorkMode(spec.workModeMapping[spec.mode])
-				AnimatedVehicle.updateAnimations(self, 0, true)	
-				dbgprint("onUpdate: setting workMode to "..tostring(spec.workModeMapping[spec.mode]), 2)
 			end
 			
 			spec.lastMode = spec.mode
@@ -470,11 +476,12 @@ function CultivatorSettings:onDraw(dt)
 		end
 	end
 	if specCV ~= nil and spec ~= nil then
-		dbgrender("useDeepMode: "..tostring(specCV.useDeepMode), 1, 3)
-		dbgrender("isSubsoiler: "..tostring(specCV.isSubsoiler), 2, 3)
-		dbgrender("useDeepModeBackup: "..tostring(specCV.useDeepModeBackup), 4, 3)
-		dbgrender("isSubsoilerBackup: "..tostring(specCV.isSubsoilerBackup), 5, 3)
-		dbgrender("spec.mode: "..tostring(spec.mode), 6, 3)
-		dbgrender("spec.config: "..tostring(spec.config), 7, 3)
+		dbgrender("useWorkModes: "..tostring(spec.useWorkModes), 1, 3)
+		dbgrender("useDeepMode: "..tostring(specCV.useDeepMode), 3, 3)
+		dbgrender("isSubsoiler: "..tostring(specCV.isSubsoiler), 4, 3)
+		dbgrender("useDeepModeBackup: "..tostring(specCV.useDeepModeBackup), 6, 3)
+		dbgrender("isSubsoilerBackup: "..tostring(specCV.isSubsoilerBackup), 7, 3)
+		dbgrender("spec.mode: "..tostring(spec.mode), 8, 3)
+		dbgrender("spec.config: "..tostring(spec.config), 9, 3)
 	end
 end
