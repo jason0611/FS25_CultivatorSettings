@@ -240,11 +240,12 @@ function CultivatorSettings:onWorkModeChanged(superfunc, workMode, oldWorkMode)
     
     local spec = self.spec_CultivatorSettings
 	local spec_wm = self.spec_workMode
-	
-    local newState = spec_wm.state
-    for i = 2,4 do
-    	if spec.workModeMapping[i] == newState then spec.mode = i end
-    end
+	if spec ~= nil and spec_wm ~= nil then
+		local newState = spec_wm.state
+		for i = 2,4 do
+			if spec.workModeMapping[i] == newState then spec.mode = i end
+		end
+	end
 end
 
 function CultivatorSettings:saveToXMLFile(xmlFile, key, usedModNames)
