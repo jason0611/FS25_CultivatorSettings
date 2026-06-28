@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="103">
+<modDesc descVersion="110">
 	<author>Glowins Modschmiede</author>
-  <version>2.0.1.0</version>
+  <version>2.0.1.1-BETA</version>
 	<title>
 		<en>Cultivator Settings</en>
 		<de>Grubbereinstellungen</de>
@@ -29,6 +29,9 @@ Change Log V2.0.0.1
 Change Log V2.0.1.0
 - Taking different soil types into account with PrecisionFarming
 
+Change Log V2.0.1.1
+- Fixed reset to default workmode setting if a player joins a multiplayer game
+
 GitHub link: https://github.com/jason0611/FS25_CultivatorSettings
 Further ideas or requests are welcome at https://github.com/jason0611/FS25_CultivatorSettings
 ]]>
@@ -54,6 +57,9 @@ Change Log V2.0.0.1
 
 Change Log V2.0.1.0
 - Berücksichtigung der verschiedenen Bodentypen mit PrecisionFarming
+
+Change Log V2.0.1.1
+- Fehler behoben, durch den der Arbeitsmodus auf Standard zurückgesetzt wurde, wenn ein Spieler einem Multiplayer-Spiel beitritt
 
 GitHub-Link: https://github.com/jason0611/FS25_CultivatorSettings
 Weitere Ideen oder Wünsche werden gerne unter https://github.com/jason0611/FS25_CultivatorSettings entgegengenommen
