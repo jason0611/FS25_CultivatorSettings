@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 --
 -- Glowins Modschmiede: Debug-Tool
 -- Author: Jason06 / Glowins Mod-Schmiede
@@ -12,6 +13,7 @@
 GMSDebug = {}
 GMSDebug.modName = "Unknown Mod"
 GMSDebug.state = false
+GMSDebug.filter = nil
 GMSDebug.consoleCommands = false
 
 function GMSDebug:init(modName, dbg, dbgLevel)
@@ -21,6 +23,14 @@ function GMSDebug:init(modName, dbg, dbgLevel)
 		GMSDebug.level = 1
 	else	
 		GMSDebug.level = dbgLevel
+	end
+	
+	if GMSDebug.state then
+		local level = "BETA"
+		if GMSDebug.level > 1 then
+			level = "DEV"
+		end
+		dbgprint("This version is a "..level.."-Version")
 	end
 end
 
@@ -34,6 +44,7 @@ end
 function GMSDebug:print(text, prio)
 	if prio == nil then prio = 1; end
 	if not GMSDebug.state or prio > GMSDebug.level then return; end
+	if GMSDebug.filter ~= nil and string.find(text, GMSDebug.filter) == nil then return; end
 	print(GMSDebug.modName.." :: Prio "..tostring(prio).." :: "..tostring(text))
 end
 
@@ -45,12 +56,18 @@ function GMSDebug:print_r(table, prio, level)
 	GMSDebug:print("END OF "..tostring(table).." =================")
 end
 
+function GMSDebug:printCallstack(prio)
+	if prio == nil then prio = 1; end
+	if not GMSDebug.state or prio > GMSDebug.level then return; end
+	printCallstack()
+end
+
 function GMSDebug:render(text, pos, prio)
 	if prio == nil then prio = 3; end
 	if not GMSDebug.state or prio > GMSDebug.level then return; end
 	if pos == nil then pos = 1; end
 	setTextAlignment(RenderText.ALIGN_LEFT)
-	renderText(0.02, 0.83 - pos * 0.04, 0.02, "GMSDebug: "..text)
+	renderText(0.02, 0.83 - pos * 0.02, 0.01, "GMSDebug: "..text)
 end
 
 function GMSDebug:renderTable(data, pos, prio)
@@ -60,20 +77,22 @@ function GMSDebug:renderTable(data, pos, prio)
 	local n = 0
 	for i, d in pairs(data) do
 		if string.sub(tostring(d), 1, 5) ~= "table" then
-			renderText(0.50, 0.95 - (pos + n) * 0.02, 0.01, tostring(i)..": "..tostring(d), pos + n, prio)
+			renderText(0.50, 0.95 - (pos + n) * 0.02, 0.01, tostring(i)..": "..tostring(d))
 			n = n + 1
 		end
 	end
 end
 
-function GMSDebug:toggleDebug(prio)
+function GMSDebug:toggleDebug(prio, filter)
 	local level = tonumber(prio)
-	if level == nil or level == GMSDebug.level then
+	if filter ~= nil then GMSDebug.filter = tostring(filter) else GMSDebug.filter = nil end
+	if level == nil then
 		GMSDebug.state = not GMSDebug.state
 	else
 		GMSDebug.level = level
+		GMSDebug.state = true
 	end
-	print("GMSDebug: New state is "..tostring(GMSDebug.state).." / Prio-Level is "..tostring(GMSDebug.level))
+	print("GMSDebug: Debug state is "..tostring(GMSDebug.state).." / Prio-Level is "..tostring(GMSDebug.level).." / Filter set to "..tostring(GMSDebug.filter))
 end
 
 
@@ -87,6 +106,10 @@ end
 
 function dbgprint(text, prio)
 	GMSDebug:print(text, prio)
+end
+
+function dbgprintCallstack(prio)
+	GMSDebug:printCallstack(prio)
 end
 
 function dbgprint_r(table, prio, level)
